@@ -3,7 +3,7 @@
 
 ## About
 
-FastPluginConfigurer is a ultimate plugin that speeds up plugin customization.
+SimplePenalty is a plugin for penalties that are given to players by admins.
 
 ## Issues
 
