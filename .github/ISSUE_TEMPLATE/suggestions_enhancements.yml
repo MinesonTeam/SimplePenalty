@@ -1,5 +1,5 @@
 name: 💡 Suggestion or enhancement
-description: Suggest a new feature or enhancement for the FastPluginConfigurer
+description: Suggest a new feature or enhancement for the SimplePenalty
 labels: ["enhancement"]
 body:
   - type: textarea
@@ -7,7 +7,7 @@ body:
     attributes:
       label: Description
       description: Please provide a clear and concise description of what the suggestion is.
-      placeholder: I'd like it if the FastPluginConfigurer would let you do...
+      placeholder: I'd like it if the SimplePenalty would let you do...
     validations:
       required: true
   - type: textarea
