@@ -1,1 +1,7 @@
-test
+blank_issues_enabled: false
+contact_links:
+  - name: 🏃 Get quick support
+    url: https://discord.com/invite/PxqvBT2Mjm
+    about: |
+      Hxncus`s Plugin`s Support Discord is the primary place to go to get quick support.
+      If you have a question or need help, drop by and we can work through your issue together!
