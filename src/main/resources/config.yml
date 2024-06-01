@@ -1,0 +1,24 @@
+# Пожалуйста, не изменяйте версию плагина.
+version: 1
+lang: ru
+database:
+  # Типы базы данных: SQLite, MySQL, MariaDB.
+  type: SQLite
+  sql:
+    # IP адрес для базы данных. (Не относится к SQLite)
+    host: localhost
+    # Порт для базы данных. (Не относится к SQLite)
+    port: '3306'
+    # Имя базы данных, в которой будут храниться данные.
+    # База данных должна быть уже создана! (Не относится к SQLite)
+    database: fdp
+    # Данные для подключения к базе данных. (Не относится к SQLite)
+    username: root
+    password: ''
+    # Префикс для всех таблиц.
+    table-prefix: fdp_
+    properties:
+      autoReconnect: true
+      characterEncoding: utf8
+      # Использовать ли SSL для подключения к удаленной базе данных SQL (не относится к SQLite).
+      useSSL: false

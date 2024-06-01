@@ -1,0 +1,11 @@
+name: SimplePenalty
+version: '${version}'
+main: kz.hxncus.mc.simplepenalty.SimplePenalty
+api-version: '1.13'
+commands:
+  fdp:
+    permission: "sp"
+    aliases:
+      - simplepenalty
+      - penalty
+      - spenalty
