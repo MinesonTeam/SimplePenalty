@@ -6,10 +6,10 @@ body:
     attributes:
       value: "Thanks for taking the time to raise a bug! Try to be as detailed as possible to get the best support for your issue as possible."
   - type: input
-    id: fastpluginconfigurer-version
+    id: simplepenalty-version
     attributes:
-      label: FastPluginConfigurer version
-      description: What version of the FastPluginConfigurer are you using?
+      label: SimplePenalty version
+      description: What version of the SimplePenalty are you using?
       placeholder: "1.0.5.0..."
     validations:
       required: true
@@ -42,8 +42,8 @@ body:
       label: What I did
       description: What did you do to encounter this bug? Please be as detailed as possible!
       placeholder: |
-        - I converted file "inventory.yml" into chest...
-        - I ran the command `/fpc config Essentials`...
+        - I changed config key lang into...
+        - I ran the command `/sp give Hxncus 100`...
     validations:
       required: true
   - type: textarea
@@ -65,10 +65,10 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Server logs and FastPluginConfigurer config
+      label: Server logs and SimplePenalty config
       description: |
         If you think it will be helpful, please include any server logs.
-        If you are using the CommandAPI plugin version, please include the FastPluginConfigurer's `config.yml` file from `plugins/FastPluginConfigurer/config.yml`.
+        Also please provide the SimplePenalty's `config.yml` file from `plugins/SimplePenalty/config.yml`.
       placeholder: Logs and configs (if you think it'll help!)
     validations:
       required: false
