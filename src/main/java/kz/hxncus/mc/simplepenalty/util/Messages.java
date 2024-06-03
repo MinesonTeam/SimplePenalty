@@ -10,7 +10,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public enum Messages {
-    HELP, HELP_ADMIN, MUST_BE_PLAYER, PREFIX;
+    HELP, HELP_ADMIN, MUST_BE_PLAYER, PREFIX, PLAYER_NOT_FOUND, PENALTY_SUCCESSFULLY_PAID, PENALTY_EXPIRED_TITLE, PENALTY_LIST_HEADER, PENALTY_INFORMATION,
+    NOT_ENOUGH_MONEY, PENALTY_NOT_FOUND, PENALTY_SUCCESSFULLY_CANCELED, PENALTY_COST_LESS, PLUGIN_SUCCESSFULLY_RELOADED;
 
     private List<String> messageList;
     private final FileConfiguration langConfig = SimplePenalty.getInstance()
@@ -33,6 +34,10 @@ public enum Messages {
         }
     }
 
+    public String getMessage(int index, Object... args) {
+        return messageList.get(index) == null ? "" : getFormattedMessage(messageList.get(index), args);
+    }
+
     public String getMessage(String message) {
         return message.replace("{PREFIX}", PREFIX.messageList.get(0));
     }
@@ -41,7 +46,11 @@ public enum Messages {
         return String.format(getMessage(message), args);
     }
 
-    public void sendMessage(CommandSender sender, Object... args) {
+    public void sendMessage(CommandSender sender) {
+        sender.sendMessage(getFormattedMessage(getMessage(0)));
+    }
+
+    public void sendMessages(CommandSender sender, Object... args) {
         for (String message : messageList) {
             sender.sendMessage(getFormattedMessage(message, args));
         }

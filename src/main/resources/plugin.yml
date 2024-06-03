@@ -3,7 +3,7 @@ version: '${version}'
 main: kz.hxncus.mc.simplepenalty.SimplePenalty
 api-version: '1.13'
 commands:
-  fdp:
+  sp:
     permission: "sp"
     aliases:
       - simplepenalty

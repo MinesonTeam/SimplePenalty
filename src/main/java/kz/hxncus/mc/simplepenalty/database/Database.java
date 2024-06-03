@@ -2,19 +2,16 @@ package kz.hxncus.mc.simplepenalty.database;
 
 import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jooq.DSLContext;
 import org.jooq.QueryPart;
 import org.jooq.Record;
 import org.jooq.Result;
-
-import java.sql.Connection;
+import org.jooq.SQLDialect;
 
 public interface Database {
     void createConnection();
-    Database.Type getType();
-    Connection getConnection();
+    DatabaseSettings getSettings();
+    SQLDialect getSQLDialect();
     void closeConnection();
-    DSLContext getDSLContext(@NonNull Connection connection);
     @NonNull
     Result<Record> fetch(@NonNull String sql);
     @NonNull Result<Record> fetch(@NonNull String sql, Object @NonNull ... bindings);
@@ -28,12 +25,4 @@ public interface Database {
     int execute(@NonNull String sql, QueryPart @NonNull ... parts);
     int getNewId(@NonNull String table);
     void reload();
-
-    enum Type {
-        SQLITE(SQLite.class), MYSQL(MySQL.class), MARIADB(MariaDB.class);
-        final Class<? extends Database> clazz;
-        Type(Class<? extends Database> clazz) {
-            this.clazz = clazz;
-        }
-    }
 }

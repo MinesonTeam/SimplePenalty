@@ -2,20 +2,19 @@ package kz.hxncus.mc.simplepenalty.database;
 
 import lombok.NonNull;
 import org.bukkit.plugin.Plugin;
-
-import java.util.Map;
+import org.jooq.SQLDialect;
 
 public class MySQL extends AbstractDatabase {
-    public MySQL(@NonNull Plugin plugin, @NonNull String host, @NonNull String port, @NonNull String database, @NonNull String username, @NonNull String password) {
-        super(plugin, "jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+    public MySQL(@NonNull Plugin plugin, String tableSQL, @NonNull DatabaseSettings settings) {
+        super(plugin, "jdbc:mysql://" + settings.host + ":" + settings.port + "/" + settings.database, tableSQL, settings);
     }
 
-    public MySQL(@NonNull Plugin plugin, @NonNull String host, @NonNull String port, @NonNull String database, @NonNull String username, @NonNull String password, Map<String, String> properties, String tableSQL) {
-        super(plugin, "jdbc:mysql://" + host + ":" + port + "/" + database, username, password, properties, tableSQL);
+    public MySQL(@NonNull Plugin plugin, @NonNull DatabaseSettings settings) {
+        this(plugin, null, settings);
     }
 
     @Override
-    public Database.Type getType() {
-        return Database.Type.MYSQL;
+    public SQLDialect getSQLDialect() {
+        return SQLDialect.MYSQL;
     }
 }

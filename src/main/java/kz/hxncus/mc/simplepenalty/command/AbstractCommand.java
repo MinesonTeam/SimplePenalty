@@ -1,6 +1,7 @@
 package kz.hxncus.mc.simplepenalty.command;
 
 import kz.hxncus.mc.simplepenalty.SimplePenalty;
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;

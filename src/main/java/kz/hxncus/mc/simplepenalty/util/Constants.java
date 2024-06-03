@@ -14,10 +14,7 @@ public class Constants {
     public final String YML_EXPANSION = ".yml";
     public final String VERSION = "version";
 
-    public final Set<String> EMBEDDED_LANGUAGES = new HashSet<>(Arrays.asList("langs\\ar.yml", "langs\\bn.yml", "langs\\da.yml", "langs\\de.yml",
-            "langs\\en.yml", "langs\\eo.yml", "langs\\es.yml", "langs\\fr.yml", "langs\\hi.yml", "langs\\id.yml",
-            "langs\\id.yml", "langs\\ja.yml", "langs\\nl.yml", "langs\\no.yml", "langs\\pt.yml", "langs\\ru.yml",
-            "langs\\sv.yml", "langs\\ua.yml", "langs\\zh.yml"));
+    public final Set<String> EMBEDDED_LANGUAGES = new HashSet<>(Arrays.asList("langs\\en.yml", "langs\\ru.yml"));
     public final Set<String> SUPPORTED_LANGUAGES = new HashSet<>();
     public final Set<String> FILES = new HashSet<>(Collections.singletonList("config.yml"));
     static {

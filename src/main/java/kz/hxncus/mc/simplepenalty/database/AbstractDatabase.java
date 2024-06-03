@@ -1,81 +1,47 @@
 package kz.hxncus.mc.simplepenalty.database;
 
 import com.zaxxer.hikari.HikariDataSource;
+import kz.hxncus.mc.simplepenalty.util.StringUtil;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.plugin.Plugin;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.QueryPart;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.impl.DSL;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
 
 public abstract class AbstractDatabase implements Database {
     @Getter
     protected Plugin plugin;
-    @Getter
-    @Setter
     protected String url;
+    protected String tableSQL;
     @Getter
-    @Setter
-    protected String username;
-    @Setter
-    protected String password;
-    @Getter
-    protected String tablePrefix;
-    @Getter
-    @Setter
-    protected Map<String, String> properties;
+    protected DatabaseSettings settings;
     protected HikariDataSource dataSource;
+    protected DSLContext dslContext;
 
-    protected AbstractDatabase(@NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password) {
-        this(plugin, url, username, password, null);
-    }
-
-    protected AbstractDatabase(@NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password, Map<String, String> properties) {
-        this(plugin, url, username, password, properties, null);
-    }
-
-    protected AbstractDatabase(@NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password, Map<String, String> properties, String tableSQL) {
+    protected AbstractDatabase(@NonNull Plugin plugin, @NonNull String url, String tableSQL, @NonNull DatabaseSettings settings) {
         this.plugin = plugin;
         this.url = url;
-        this.username = username;
-        this.password = password;
-        this.properties = properties;
+        this.tableSQL = tableSQL;
+        this.settings = settings;
         createConnection();
-        if (tableSQL != null && !tableSQL.isEmpty()) {
-            execute(tableSQL);
-        }
     }
 
     @Override
     public void createConnection() {
         this.dataSource = new HikariDataSource();
-        this.dataSource.setJdbcUrl(this.url);
-        this.dataSource.setUsername(this.username);
-        this.dataSource.setPassword(this.password);
-        if (this.properties != null) {
-            this.properties.forEach(this.dataSource::addDataSourceProperty);
+        this.dataSource.setJdbcUrl(url);
+        this.dataSource.setUsername(settings.username);
+        this.dataSource.setPassword(settings.password);
+        if (settings.properties != null) {
+            settings.properties.forEach(this.dataSource::addDataSourceProperty);
         }
-    }
-
-    @SneakyThrows
-    @Override
-    public Connection getConnection() {
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
-    }
-
-    @Override
-    public void closeConnection() {
-        if (this.dataSource != null) {
-            this.dataSource.close();
+        this.dslContext = DSL.using(this.dataSource, getSQLDialect());
+        if (StringUtil.isNotEmpty(tableSQL)) {
+            execute(tableSQL);
         }
     }
 
@@ -92,96 +58,62 @@ public abstract class AbstractDatabase implements Database {
     @SneakyThrows
     @Override
     public int execute(@NonNull String sql) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).execute(sql);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.execute(sql);
     }
 
     @SneakyThrows
     @Override
     public @NonNull Result<Record> fetch(@NonNull String sql) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).fetch(sql);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.fetch(sql);
     }
 
     @SneakyThrows
     @Override
     public @NonNull Result<Record> fetch(@NonNull String sql, Object @NonNull ... bindings) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).fetch(sql, bindings);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.fetch(sql, bindings);
     }
 
     @SneakyThrows
     @Override
     public @NonNull Result<Record> fetch(@NonNull String sql, QueryPart @NonNull ... parts) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).fetch(sql, parts);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.fetch(sql, parts);
     }
 
     @SneakyThrows
     @Override
     public Record fetchOne(@NonNull String sql) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).fetchOne(sql);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.fetchOne(sql);
     }
 
     @SneakyThrows
     @Override
     public Record fetchOne(@NonNull String sql, Object @NonNull ... bindings) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).fetchOne(sql, bindings);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.fetchOne(sql, bindings);
     }
 
     @SneakyThrows
     @Override
     public Record fetchOne(@NonNull String sql, QueryPart @NonNull ... parts) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).fetchOne(sql, parts);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.fetchOne(sql, parts);
     }
 
     @SneakyThrows
     @Override
     public int execute(@NonNull String sql, Object @NonNull ... bindings) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).execute(sql, bindings);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.execute(sql, bindings);
     }
 
     @SneakyThrows
     @Override
     public int execute(@NonNull String sql, QueryPart @NonNull ... parts) {
-        try (Connection connection = this.dataSource.getConnection()) {
-            return getDSLContext(connection).execute(sql, parts);
-        } catch (SQLException e) {
-            throw new SQLException(e);
-        }
+        return dslContext.execute(sql, parts);
     }
 
     @Override
-    public @NonNull DSLContext getDSLContext(@NonNull Connection connection) {
-        return DSL.using(connection, SQLDialect.valueOf(getType().name()));
+    public void closeConnection() {
+        if (this.dataSource != null) {
+            this.dataSource.close();
+        }
     }
 
     @Override

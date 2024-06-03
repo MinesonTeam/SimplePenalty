@@ -2,7 +2,6 @@ package kz.hxncus.mc.simplepenalty.manager;
 
 import kz.hxncus.mc.simplepenalty.SimplePenalty;
 import kz.hxncus.mc.simplepenalty.util.Constants;
-import kz.hxncus.mc.simplepenalty.util.StringUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,8 +18,8 @@ public class LangManager {
 
     public LangManager(SimplePenalty plugin) {
         LangManager.plugin = plugin;
-        lang = plugin.getConfig().getString("lang");
-        if (StringUtil.isEmpty(lang) || !Constants.SUPPORTED_LANGUAGES.contains("translations\\" + lang + Constants.YML_EXPANSION)) {
+        lang = plugin.getConfig().getString("lang", "en.yml");
+        if (!Constants.SUPPORTED_LANGUAGES.contains("langs\\" + lang + Constants.YML_EXPANSION)) {
             plugin.getLogger().warning(() -> String.format("Unknown language '%s'. Selected 'en' as the default language.", lang));
             lang = "en";
         }
