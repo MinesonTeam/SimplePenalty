@@ -53,10 +53,10 @@ public final class SimplePenalty extends JavaPlugin {
     }
 
     private void registerDatabase() {
-        getDataFolder().mkdir();
-        String tableSQL = "CREATE TABLE IF NOT EXISTS " +
-                getConfig().getString("database.sql.table-prefix", "sp_") +
-                "players (id BIGINT, officer VARCHAR(32), offender VARCHAR(32), count INT, description VARCHAR(256), time BIGINT, PRIMARY KEY (id))";
+        getDataFolder().mkdirs();
+        String tableSQL = "CREATE TABLE IF NOT EXISTS "
+                + getConfig().getString("database.sql.table-prefix", "sp_")
+                + "players (id BIGINT, officer VARCHAR(32), offender VARCHAR(32), count INT, description VARCHAR(256), time BIGINT, PRIMARY KEY (id))";
         DatabaseSettings settings = new DatabaseSettings(getConfig());
         switch(getConfig().getString("database.type", "SQLite")) {
             case "MariaDB":
