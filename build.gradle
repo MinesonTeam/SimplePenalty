@@ -19,6 +19,12 @@ repositories {
 }
 
 dependencies {
+    implementation("org.bstats:bstats-bukkit:3.0.2")
+
+    // Local Includes
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    compileOnly fileTree(dir: 'libs/compileOnly', include: '*.jar')
+
     compileOnly "org.spigotmc:spigot-api:1.20.3-R0.1-SNAPSHOT"
 
     implementation 'com.zaxxer:HikariCP:4.0.3'
@@ -35,7 +41,7 @@ compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
 shadowJar {
-    destinationDirectory = file("E:\\dev-server-1.16.5\\plugins")
+    relocate("org.bstats", group + ".simplehandcuff.libs.bstats")
 }
 
 test {

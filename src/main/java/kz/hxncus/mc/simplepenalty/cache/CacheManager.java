@@ -1,8 +1,6 @@
-package kz.hxncus.mc.simplepenalty.manager;
+package kz.hxncus.mc.simplepenalty.cache;
 
 import kz.hxncus.mc.simplepenalty.SimplePenalty;
-import kz.hxncus.mc.simplepenalty.cache.PenaltyCache;
-import kz.hxncus.mc.simplepenalty.cache.PlayerPenaltyCache;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -16,10 +14,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Getter
 @EqualsAndHashCode
 public class CacheManager {
     private static SimplePenalty plugin;
-    @Getter
     private final AtomicInteger maxId;
     private final Map<UUID, PlayerPenaltyCache> playerPenaltyCacheMap = new ConcurrentHashMap<>();
 
@@ -32,8 +30,16 @@ public class CacheManager {
 
     }
 
+    public boolean isPlayerHasPenaltyCache(UUID uuid) {
+        return playerPenaltyCacheMap.containsKey(uuid);
+    }
+
     public PlayerPenaltyCache getPlayerPenaltyCache(final UUID uuid) {
         return playerPenaltyCacheMap.computeIfAbsent(uuid, PlayerPenaltyCache::new);
+    }
+
+    public PlayerPenaltyCache getPlayerPenaltyCache(final Player player) {
+        return getPlayerPenaltyCache(player.getUniqueId());
     }
 
     public PlayerPenaltyCache removePlayerPenaltyCache(final UUID uuid) {
@@ -67,7 +73,7 @@ public class CacheManager {
                 plugin.getDatabase().fetchOne(new StringBuilder().append("REPLACE INTO ")
                     .append(plugin.getDatabase().getSettings().getTablePrefix())
                     .append("players (id, officer, offender, count, description, time) VALUES (?, ?, ?, ?, ?, ?)")
-                    .toString(), penalty.getId(), penalty.getOfficer(), penalty.getOffender(), penalty.getCount(), penalty.getDescription(), penalty.getTime());
+                    .toString(), penalty.getId(), penalty.getOfficer(), penalty.getOffender(), penalty.getCount(), penalty.getDescription().length() > 256 ? penalty.getDescription().substring(0, 256) : penalty.getDescription(), penalty.getTime());
             } else {
                 plugin.getDatabase().fetchOne(new StringBuilder().append("DELETE FROM ")
                                                                  .append(plugin.getDatabase().getSettings().getTablePrefix())

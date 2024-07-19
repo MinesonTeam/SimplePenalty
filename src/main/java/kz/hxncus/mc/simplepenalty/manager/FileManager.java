@@ -16,12 +16,15 @@ import java.io.InputStreamReader;
 @EqualsAndHashCode
 public class FileManager {
     private static SimplePenalty plugin;
+    private String lang;
     private File langsDir;
+    private FileConfiguration langConfig;
 
     public FileManager(SimplePenalty plugin) {
         FileManager.plugin = plugin;
         loadDirs();
         loadFiles();
+        loadLang();
         if (isConfigOutdated()) {
             updateFiles();
         }
@@ -40,6 +43,16 @@ public class FileManager {
                 plugin.saveResource(filePath, false);
             }
         }
+    }
+
+    private void loadLang() {
+        lang = plugin.getConfig().getString("lang", "en");
+        if (!Constants.SUPPORTED_LANGUAGES.contains("langs\\" + lang + Constants.YML_EXPANSION)) {
+            plugin.getLogger().warning(() -> String.format("Unknown language '%s'. Selected 'en' as the default language.", lang));
+            lang = "en";
+        }
+        File file = new File(langsDir + File.separator + lang + Constants.YML_EXPANSION);
+        this.langConfig = YamlConfiguration.loadConfiguration(file);
     }
 
     private boolean isConfigOutdated() {

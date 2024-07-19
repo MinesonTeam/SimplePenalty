@@ -1,11 +1,13 @@
 package kz.hxncus.mc.simplepenalty;
 
-import kz.hxncus.mc.simplepenalty.command.SimplePenaltyCommand;
+import kz.hxncus.mc.simplepenalty.cache.CacheManager;
+import kz.hxncus.mc.simplepenalty.cache.PenaltyCache;
+import kz.hxncus.mc.simplepenalty.cache.PlayerPenaltyCache;
+import kz.hxncus.mc.simplepenalty.command.PenaltyCommand;
 import kz.hxncus.mc.simplepenalty.database.*;
 import kz.hxncus.mc.simplepenalty.listener.PlayerListener;
-import kz.hxncus.mc.simplepenalty.manager.CacheManager;
 import kz.hxncus.mc.simplepenalty.manager.FileManager;
-import kz.hxncus.mc.simplepenalty.manager.LangManager;
+import kz.hxncus.mc.simplepenalty.util.Messages;
 import kz.hxncus.mc.simplepenalty.util.Metrics;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -18,7 +20,6 @@ public final class SimplePenalty extends JavaPlugin {
     @Getter
     private static SimplePenalty instance;
     private FileManager fileManager;
-    private LangManager langManager;
     private CacheManager cacheManager;
     private Database database;
 
@@ -27,6 +28,8 @@ public final class SimplePenalty extends JavaPlugin {
         instance = this;
     }
 
+
+
     @Override
     public void onEnable() {
         registerDatabase();
@@ -34,6 +37,7 @@ public final class SimplePenalty extends JavaPlugin {
         registerCommands();
         registerListeners(Bukkit.getPluginManager());
         registerMetrics();
+        registerTasks();
     }
 
     @Override
@@ -42,20 +46,19 @@ public final class SimplePenalty extends JavaPlugin {
             cacheManager.loadPlayerIntoDatabase(player.getUniqueId());
         }
         database.closeConnection();
+        reloadConfig();
     }
 
     private void registerManagers() {
         this.fileManager = new FileManager(this);
-        this.langManager = new LangManager(this);
         this.cacheManager = new CacheManager(this);
     }
 
     private void registerDatabase() {
         getDataFolder().mkdir();
-        String tableSQL = new StringBuilder().append("CREATE TABLE IF NOT EXISTS ")
-            .append(getConfig().getString("database.sql.table-prefix", "sp_"))
-            .append("players (id BIGINT, officer VARCHAR(32), offender VARCHAR(32), count INT, description VARCHAR(256), time BIGINT, PRIMARY KEY (id))")
-            .toString();
+        String tableSQL = "CREATE TABLE IF NOT EXISTS " +
+                getConfig().getString("database.sql.table-prefix", "sp_") +
+                "players (id BIGINT, officer VARCHAR(32), offender VARCHAR(32), count INT, description VARCHAR(256), time BIGINT, PRIMARY KEY (id))";
         DatabaseSettings settings = new DatabaseSettings(getConfig());
         switch(getConfig().getString("database.type", "SQLite")) {
             case "MariaDB":
@@ -71,7 +74,7 @@ public final class SimplePenalty extends JavaPlugin {
     }
 
     private void registerCommands() {
-        new SimplePenaltyCommand(this);
+        new PenaltyCommand(this);
     }
 
     private void registerListeners(PluginManager pluginManager) {
@@ -80,6 +83,23 @@ public final class SimplePenalty extends JavaPlugin {
 
     private void registerMetrics() {
         Metrics metrics = new Metrics(this, 22104);
-        metrics.addCustomChart(new Metrics.SimplePie("used_language", () -> this.langManager.getLang()));
+        metrics.addCustomChart(new Metrics.SimplePie("used_language", () -> this.fileManager.getLang()));
+    }
+
+    private void registerTasks() {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                PlayerPenaltyCache penaltyCache = cacheManager.getPlayerPenaltyCache(player);
+                for (PenaltyCache penalty : penaltyCache.getPenalties()) {
+                    if (System.currentTimeMillis() >= penalty.getTime()) {
+                        penalty.setCount(Math.min(getConfig().getInt("penalty-max-count", 10000), (int) (penalty.getCount() * getConfig().getDouble("penalty-expire-multiplayer", 2.0))));
+                        penalty.setTime(getConfig().getInt("penalty-expire-time", 604800) * 1000L + System.currentTimeMillis());
+                        player.sendTitle(Messages.PENALTY_EXPIRED_TITLE.getMessage(0), Messages.PENALTY_EXPIRED_TITLE.getMessage(1),
+                                getConfig().getInt("penalty-title-fadeIn", 10), getConfig().getInt("penalty-title-stay", 70),
+                                getConfig().getInt("penalty-title-fadeOut", 20));
+                    }
+                }
+            }
+        }, 20L, 20L);
     }
 }

@@ -4,7 +4,7 @@ main: kz.hxncus.mc.simplepenalty.SimplePenalty
 api-version: '1.13'
 commands:
   sp:
-    permission: "sp"
+    permission: "simplepenalty.command"
     aliases:
       - simplepenalty
       - penalty

@@ -2,11 +2,14 @@
 version: 1
 lang: ru
 # Время истекания штрафа в секундах.
-penalty-expire-time: 30 # 604800
+penalty-max-count: 10000
+penalty-expire-time: 604800
 penalty-expire-multiplayer: 2.0
 penalty-title-fadeIn: 10
 penalty-title-stay: 70
 penalty-title-fadeOut: 20
+# Таблица шаблонов https://javarush.com/quests/lectures/questsyntaxpro.level16.lecture07
+penalty-list-date-format: "dd-MM-yyyy HH:mm:ss"
 database:
   # Типы базы данных: SQLite, MySQL, MariaDB.
   type: SQLite

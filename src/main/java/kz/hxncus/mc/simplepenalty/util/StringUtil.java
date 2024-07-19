@@ -2,6 +2,8 @@ package kz.hxncus.mc.simplepenalty.util;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
+
 @UtilityClass
 public class StringUtil {
     public int length(final CharSequence sequence) {
@@ -57,5 +59,19 @@ public class StringUtil {
             }
         }
         return true;
+    }
+
+    public String join(List<?> list, String separator) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i));
+            if (i < list.size() - 1) {
+                sb.append(separator);
+            }
+        }
+        return sb.toString();
     }
 }

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class AbstractCommand implements SimpleCommand {
+public abstract class AbstractCommand implements ICommand {
     public final SimplePenalty plugin;
 
     protected AbstractCommand(SimplePenalty plugin, String command) {
@@ -41,7 +41,7 @@ public abstract class AbstractCommand implements SimpleCommand {
         String last = args[args.length - 1];
         List<String> result = new ArrayList<>();
         for (final String arg : list) {
-            if (arg.toLowerCase(Locale.US).startsWith(last.toLowerCase(Locale.US))) {
+            if (arg.toLowerCase(Locale.ENGLISH).startsWith(last.toLowerCase(Locale.ENGLISH))) {
                 result.add(arg);
             }
         }

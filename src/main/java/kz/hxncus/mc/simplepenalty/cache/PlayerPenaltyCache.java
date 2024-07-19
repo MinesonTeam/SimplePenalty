@@ -14,7 +14,9 @@ public class PlayerPenaltyCache {
     private BukkitTask task;
 
     public void setTask(BukkitTask task) {
-        this.task.cancel();
+        if (this.task != null) {
+            this.task.cancel();
+        }
         this.task = task;
     }
 }
