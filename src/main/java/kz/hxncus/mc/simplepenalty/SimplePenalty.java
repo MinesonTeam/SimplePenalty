@@ -28,8 +28,6 @@ public final class SimplePenalty extends JavaPlugin {
         instance = this;
     }
 
-
-
     @Override
     public void onEnable() {
         registerDatabase();
