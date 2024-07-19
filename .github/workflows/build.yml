@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.7
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v4.2.1
         with:
           distribution: adopt
           java-version: 21
@@ -23,11 +23,11 @@ jobs:
       - name: Build plugin
         run: ./gradlew build
       - name: Upload plugin
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.4
         with:
           name: SimplePenalty
           path: "*/build/libs/*.jar"
-      - uses: dev-drprasad/delete-tag-and-release@v1
+      - uses: dev-drprasad/delete-tag-and-release@v1.1
         if: ${{ github.event_name == 'push' }}
         with:
           delete_release: true
@@ -45,7 +45,7 @@ jobs:
           echo "::set-output name=jarname::$output"
       - name: Release the build
         if: ${{ github.event_name == 'push' }}
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.14.0
         with:
           artifacts: build/libs/${{ steps.find-jar.outputs.jarname }}
           body: ${{ join(github.event.commits.*.message, '\n') }}
