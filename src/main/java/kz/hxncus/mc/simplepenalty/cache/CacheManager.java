@@ -71,9 +71,9 @@ public class CacheManager {
         for (PenaltyCache penalty : getPlayerPenaltyCache(uuid).getPenalties()) {
             if (penalty.getCount() > 0) {
                 plugin.getDatabase().fetchOne(new StringBuilder().append("REPLACE INTO ")
-                    .append(plugin.getDatabase().getSettings().getTablePrefix())
-                    .append("players (id, officer, offender, count, description, time) VALUES (?, ?, ?, ?, ?, ?)")
-                    .toString(), penalty.getId(), penalty.getOfficer(), penalty.getOffender(), penalty.getCount(), penalty.getDescription().length() > 256 ? penalty.getDescription().substring(0, 256) : penalty.getDescription(), penalty.getTime());
+                                                                 .append(plugin.getDatabase().getSettings().getTablePrefix())
+                                                                 .append("players (id, officer, offender, count, description, time) VALUES (?, ?, ?, ?, ?, ?)")
+                                                                 .toString(), penalty.getId(), penalty.getOfficer(), penalty.getOffender(), penalty.getCount(), penalty.getDescription().length() > 256 ? penalty.getDescription().substring(0, 256) : penalty.getDescription(), penalty.getTime());
             } else {
                 plugin.getDatabase().fetchOne(new StringBuilder().append("DELETE FROM ")
                                                                  .append(plugin.getDatabase().getSettings().getTablePrefix())

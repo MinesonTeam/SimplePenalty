@@ -1,5 +1,5 @@
 # {PREFIX} placeholder uses prefix key
-prefix: "§7[§bSP§7] §8»§r"
+prefix: "§7[§bSimplePenalty§7] §8»§r"
 must_be_player: "{PREFIX} Вы должны быть игроком"
 help:
   - "{PREFIX} Помощь:"

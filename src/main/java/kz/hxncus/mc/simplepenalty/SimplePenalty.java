@@ -4,7 +4,11 @@ import kz.hxncus.mc.simplepenalty.cache.CacheManager;
 import kz.hxncus.mc.simplepenalty.cache.PenaltyCache;
 import kz.hxncus.mc.simplepenalty.cache.PlayerPenaltyCache;
 import kz.hxncus.mc.simplepenalty.command.PenaltyCommand;
-import kz.hxncus.mc.simplepenalty.database.*;
+import kz.hxncus.mc.simplepenalty.database.Database;
+import kz.hxncus.mc.simplepenalty.database.DatabaseSettings;
+import kz.hxncus.mc.simplepenalty.economy.Economy;
+import kz.hxncus.mc.simplepenalty.economy.ItemEconomy;
+import kz.hxncus.mc.simplepenalty.economy.VirtualEconomy;
 import kz.hxncus.mc.simplepenalty.listener.PlayerListener;
 import kz.hxncus.mc.simplepenalty.manager.FileManager;
 import kz.hxncus.mc.simplepenalty.util.Messages;
@@ -22,6 +26,7 @@ public final class SimplePenalty extends JavaPlugin {
     private FileManager fileManager;
     private CacheManager cacheManager;
     private Database database;
+    private Economy economy;
 
     @Override
     public void onLoad() {
@@ -36,6 +41,18 @@ public final class SimplePenalty extends JavaPlugin {
         registerListeners(Bukkit.getPluginManager());
         registerMetrics();
         registerTasks();
+        registerEconomy();
+    }
+
+    private void registerEconomy() {
+        switch ("item") {
+            case "item":
+                economy = new ItemEconomy();
+                break;
+            default:
+                economy = new VirtualEconomy();
+                break;
+        }
     }
 
     @Override
@@ -53,22 +70,12 @@ public final class SimplePenalty extends JavaPlugin {
     }
 
     private void registerDatabase() {
-        getDataFolder().mkdirs();
+        getDataFolder().mkdir();
         String tableSQL = "CREATE TABLE IF NOT EXISTS "
-                + getConfig().getString("database.sql.table-prefix", "sp_")
+                + getConfig().getString("database.sql.table-prefix", "simplepenalty_")
                 + "players (id BIGINT, officer VARCHAR(32), offender VARCHAR(32), count INT, description VARCHAR(256), time BIGINT, PRIMARY KEY (id))";
         DatabaseSettings settings = new DatabaseSettings(getConfig());
-        switch(getConfig().getString("database.type", "SQLite")) {
-            case "MariaDB":
-                this.database = new MariaDB(this, tableSQL, settings);
-                break;
-            case "MySQL":
-                this.database = new MySQL(this, tableSQL, settings);
-                break;
-            default:
-                this.database = new SQLite(this, tableSQL, settings);
-                break;
-        }
+        this.database = new Database(this, tableSQL, settings);
     }
 
     private void registerCommands() {

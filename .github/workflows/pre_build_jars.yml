@@ -6,13 +6,13 @@ on:
       - development
     paths:
       - "src/**"
-      - "build.gradle"
+      - "build.gradle.kts"
   pull_request:
     branches:
     - development
     paths:
     - "src/**"
-    - "build.gradle"
+    - "build.gradle.kts"
 
 jobs:
   testBuilds:
@@ -31,7 +31,7 @@ jobs:
       with:
         distribution: "adopt"
         java-version: "${{ matrix.java-version }}"
-    - name: Make build.gradle executable
+    - name: Make build.gradle.kts executable
       run: chmod +x gradlew
     - name: Build jar with Java ${{ matrix.java-version }}
       run: ./gradlew build

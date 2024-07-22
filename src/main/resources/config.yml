@@ -1,6 +1,7 @@
 # Пожалуйста, не изменяйте версию плагина.
 version: 1
 lang: ru
+economy: item
 # Время истекания штрафа в секундах.
 penalty-max-count: 10000
 penalty-expire-time: 604800
@@ -20,12 +21,12 @@ database:
     port: '3306'
     # Имя базы данных, в которой будут храниться данные.
     # База данных должна быть уже создана! (Не относится к SQLite)
-    database: sp
+    database: simplepenalty
     # Данные для подключения к базе данных. (Не относится к SQLite)
     username: root
     password: ''
     # Префикс для всех таблиц.
-    table-prefix: sp_
+    table-prefix: simplepenalty_
     # Можно добавить свои настройки подключения к дате базе, все настройки находятся тут https://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html
     properties:
       autoReconnect: true

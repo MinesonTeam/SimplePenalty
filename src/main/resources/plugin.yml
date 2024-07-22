@@ -3,9 +3,9 @@ version: '${version}'
 main: kz.hxncus.mc.simplepenalty.SimplePenalty
 api-version: '1.13'
 commands:
-  sp:
+  simplepenalty:
     permission: "simplepenalty.command"
     aliases:
-      - simplepenalty
+      - sp
       - penalty
       - spenalty

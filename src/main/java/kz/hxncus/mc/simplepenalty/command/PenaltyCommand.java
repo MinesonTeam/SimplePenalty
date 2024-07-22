@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class PenaltyCommand extends AbstractCommand {
     public PenaltyCommand(SimplePenalty plugin) {
-        super(plugin, "sp");
+        super(plugin, "simplepenalty");
     }
 
     private void sendHelpMessage(CommandSender sender, String label) {
