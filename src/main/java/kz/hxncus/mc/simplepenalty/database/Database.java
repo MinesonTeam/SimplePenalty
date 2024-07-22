@@ -10,6 +10,7 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 
 import java.io.File;
+import java.util.Objects;
 
 public class Database implements IDatabase {
     protected String url;
@@ -22,8 +23,8 @@ public class Database implements IDatabase {
     public Database(@NonNull Plugin plugin, String tableSQL, @NonNull DatabaseSettings settings) {
         this.tableSQL = tableSQL;
         this.settings = settings;
-        if (settings.sqlDialect == SQLDialect.SQLITE) {
-            this.url = "jdbc:sqlite:" + plugin.getDataFolder().getName() + File.separator + settings.database + ".db";
+        if (Objects.requireNonNull(settings.sqlDialect) == SQLDialect.SQLITE) {
+            this.url = "jdbc:sqlite:plugins/" + plugin.getDataFolder().getName() + File.separator + settings.database + ".db";
         } else {
             this.url = "jdbc:" + settings.sqlDialect.getNameLC() + "://" + settings.host + ":" + settings.port + "/" + settings.database;
         }

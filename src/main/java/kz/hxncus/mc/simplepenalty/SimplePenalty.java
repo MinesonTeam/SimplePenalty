@@ -4,6 +4,7 @@ import kz.hxncus.mc.simplepenalty.cache.CacheManager;
 import kz.hxncus.mc.simplepenalty.cache.PenaltyCache;
 import kz.hxncus.mc.simplepenalty.cache.PlayerPenaltyCache;
 import kz.hxncus.mc.simplepenalty.command.PenaltyCommand;
+import kz.hxncus.mc.simplepenalty.database.ConfigAdapter;
 import kz.hxncus.mc.simplepenalty.database.Database;
 import kz.hxncus.mc.simplepenalty.database.DatabaseSettings;
 import kz.hxncus.mc.simplepenalty.economy.Economy;
@@ -70,11 +71,11 @@ public final class SimplePenalty extends JavaPlugin {
     }
 
     private void registerDatabase() {
-        getDataFolder().mkdir();
+        getDataFolder().mkdirs();
         String tableSQL = "CREATE TABLE IF NOT EXISTS "
                 + getConfig().getString("database.sql.table-prefix", "simplepenalty_")
                 + "players (id BIGINT, officer VARCHAR(32), offender VARCHAR(32), count INT, description VARCHAR(256), time BIGINT, PRIMARY KEY (id))";
-        DatabaseSettings settings = new DatabaseSettings(getConfig());
+        DatabaseSettings settings = new ConfigAdapter(getConfig());
         this.database = new Database(this, tableSQL, settings);
     }
 
